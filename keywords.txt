@@ -25,8 +25,8 @@ ToggleVFO KEYWORD2
 SetDCSMode KEYWORD2
 SetCTCSSToneFreq KEYWORD2
 SetDCSCode KEYWORD2
-rxState KEYWORD2
-txState	KEYWORD2
+ReadRXStatus KEYWORD2
+ReadTXStatus	KEYWORD2
 #######################################
 # Constants (LITERAL1)
 #######################################
