@@ -1,4 +1,4 @@
-// Не совсем трезвый аффтар DetSimen сентябрь 2020 
+п»ї// РќРµ СЃРѕРІСЃРµРј С‚СЂРµР·РІС‹Р№ Р°С„С„С‚Р°СЂ DetSimen СЃРµРЅС‚СЏР±СЂСЊ 2020 
 //
 #pragma once
 
@@ -12,7 +12,7 @@ const bool OFF = false;
 
 #pragma pack(push,1)
 
-struct FT897DCommand {    // буфер команд
+struct FT897DCommand {    // Р±СѓС„РµСЂ РєРѕРјР°РЅРґ
 	union {
 		struct {
 			uint8_t Byte0;
@@ -25,10 +25,10 @@ struct FT897DCommand {    // буфер команд
 	uint8_t Command;
 };
 
-const uint8_t COMMAND_SIZE = sizeof(FT897DCommand); // длина буфера комманд
+const uint8_t COMMAND_SIZE = sizeof(FT897DCommand); // РґР»РёРЅР° Р±СѓС„РµСЂР° РєРѕРјРјР°РЅРґ
 
 
-enum class TOperatingMode : uint8_t {  // режимы работы
+enum class TOperatingMode : uint8_t {  // СЂРµР¶РёРјС‹ СЂР°Р±РѕС‚С‹
 	LSB = 0x00,
 	USB = 0x01,
 	CW  = 0x02,
@@ -72,23 +72,23 @@ struct TTX_Status {
 	bool	Tangenta	: 1;
 };
 
-const uint8_t CMD_LOCK_ON	= 0x00;		// блокировка вкл/выкл
+const uint8_t CMD_LOCK_ON	= 0x00;		// Р±Р»РѕРєРёСЂРѕРІРєР° РІРєР»/РІС‹РєР»
 const uint8_t CMD_LOCK_OFF	= 0x80;
 
-const uint8_t CMD_PTT_ON	= 0x08;		// тангента вкл/выкл
+const uint8_t CMD_PTT_ON	= 0x08;		// С‚Р°РЅРіРµРЅС‚Р° РІРєР»/РІС‹РєР»
 const uint8_t CMD_PTT_OFF	= 0x88;
 
 const uint8_t CMD_SET_OPERATING_MODE = 0x07;
 
-const uint8_t CMD_CLAR_ON	= 0x05;  // Подстройка частоты (ON | OFF)
+const uint8_t CMD_CLAR_ON	= 0x05;  // РџРѕРґСЃС‚СЂРѕР№РєР° С‡Р°СЃС‚РѕС‚С‹ (ON | OFF)
 const uint8_t CMD_CLAR_OFF	= 0x85;
-const uint8_t CMD_CLAR_SETFREQ = 0xF5; // подстройка частоты
+const uint8_t CMD_CLAR_SETFREQ = 0xF5; // РїРѕРґСЃС‚СЂРѕР№РєР° С‡Р°СЃС‚РѕС‚С‹
 
-const uint8_t CMD_SET_MAIN_FREQ = 0x01; // установка частоты PLL
+const uint8_t CMD_SET_MAIN_FREQ = 0x01; // СѓСЃС‚Р°РЅРѕРІРєР° С‡Р°СЃС‚РѕС‚С‹ PLL
 
 const uint8_t CMD_SWITCH_VFO = 0x81;  // VFO-A/B
 
-const uint8_t CMD_SPLIT_ON = 0x02;  // Разнос (split) (ON | OFF)
+const uint8_t CMD_SPLIT_ON = 0x02;  // Р Р°Р·РЅРѕСЃ (split) (ON | OFF)
 const uint8_t CMD_SPLIT_OFF = 0x82;
 
 const uint8_t CMD_SET_REPEATER_OFFSET = 0x09;
@@ -114,21 +114,21 @@ protected:
 	dtsFT897D() = delete;
 	dtsFT897D(dtsFT897D& rvalue) = delete;
 
-	void ClearCmdBuffer(void);   // Очищает(обнуляет) буфер комманд. Для внутреннего использования.
+	void ClearCmdBuffer(void);   // РћС‡РёС‰Р°РµС‚(РѕР±РЅСѓР»СЏРµС‚) Р±СѓС„РµСЂ РєРѕРјРјР°РЅРґ. Р”Р»СЏ РІРЅСѓС‚СЂРµРЅРЅРµРіРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ.
 
-	void SendCommand(void) const; // Посылает 5 байт команд и данных в устройство
+	void SendCommand(void) const; // РџРѕСЃС‹Р»Р°РµС‚ 5 Р±Р°Р№С‚ РєРѕРјР°РЅРґ Рё РґР°РЅРЅС‹С… РІ СѓСЃС‚СЂРѕР№СЃС‚РІРѕ
 
 	// 
-	// преобразует частоту в строку с выравниванием влево, спереди и сзади добивает '0' до 
-	// длины ALength
+	// РїСЂРµРѕР±СЂР°Р·СѓРµС‚ С‡Р°СЃС‚РѕС‚Сѓ РІ СЃС‚СЂРѕРєСѓ СЃ РІС‹СЂР°РІРЅРёРІР°РЅРёРµРј РІР»РµРІРѕ, СЃРїРµСЂРµРґРё Рё СЃР·Р°РґРё РґРѕР±РёРІР°РµС‚ '0' РґРѕ 
+	// РґР»РёРЅС‹ ALength
 	//
-	// AFreq      - частота в виде числа с плав. точкой
-	// AIntDigits - максимальная длина целой части числа, 1, 2 или 3
-	// ALength    - общая длина всего текстового представления числа
+	// AFreq      - С‡Р°СЃС‚РѕС‚Р° РІ РІРёРґРµ С‡РёСЃР»Р° СЃ РїР»Р°РІ. С‚РѕС‡РєРѕР№
+	// AIntDigits - РјР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР° С†РµР»РѕР№ С‡Р°СЃС‚Рё С‡РёСЃР»Р°, 1, 2 РёР»Рё 3
+	// ALength    - РѕР±С‰Р°СЏ РґР»РёРЅР° РІСЃРµРіРѕ С‚РµРєСЃС‚РѕРІРѕРіРѕ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ С‡РёСЃР»Р°
 	//
-	// например у частоты 114.32145 число целых цифр 3 (114), а общая длина всех цифр - 8
+	// РЅР°РїСЂРёРјРµСЂ Сѓ С‡Р°СЃС‚РѕС‚С‹ 114.32145 С‡РёСЃР»Рѕ С†РµР»С‹С… С†РёС„СЂ 3 (114), Р° РѕР±С‰Р°СЏ РґР»РёРЅР° РІСЃРµС… С†РёС„СЂ - 8
 	//
-	// внутренний метод, снаружи не виден
+	// РІРЅСѓС‚СЂРµРЅРЅРёР№ РјРµС‚РѕРґ, СЃРЅР°СЂСѓР¶Рё РЅРµ РІРёРґРµРЅ
 	//
 	const char* Freq2String(const float AFreq, const uint8_t AIntDigits = 3, const uint8_t ALength = 8);
 
@@ -140,58 +140,58 @@ protected:
 
 public:
 
-	// конструктор. Принимает ранее созданный SoftwareSerial
+	// РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ. РџСЂРёРЅРёРјР°РµС‚ СЂР°РЅРµРµ СЃРѕР·РґР°РЅРЅС‹Р№ SoftwareSerial
 	dtsFT897D(SoftwareSerial& ASerialPort); 
     
-	// инициализация класса
+	// РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєР»Р°СЃСЃР°
 	void Init(const uint32_t ABaudRate = 9600); 
 
-	// AValue == (ON | OFF)  блокировка вкл/выкл
+	// AValue == (ON | OFF)  Р±Р»РѕРєРёСЂРѕРІРєР° РІРєР»/РІС‹РєР»
 	void SetLock(const bool AValue);  
 
-	// AValue == (ON | OFF)  тангента вкл/выкл
+	// AValue == (ON | OFF)  С‚Р°РЅРіРµРЅС‚Р° РІРєР»/РІС‹РєР»
 	void SetPTT(const bool AValue);   
 
-	// по умолчанию рабочий режим - ключ
+	// РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°Р±РѕС‡РёР№ СЂРµР¶РёРј - РєР»СЋС‡
 	void SetMode(const TOperatingMode AMode = TOperatingMode::CW); 
 
-	// AValue == (ON | OFF)  подстройка частоты вкл/выкл
+	// AValue == (ON | OFF)  РїРѕРґСЃС‚СЂРѕР№РєР° С‡Р°СЃС‚РѕС‚С‹ РІРєР»/РІС‹РєР»
 	void SetCLAR(const bool AValue); 
 
-	// установка частоты подстройки AClarFreq = -99.99...+99.99
+	// СѓСЃС‚Р°РЅРѕРІРєР° С‡Р°СЃС‚РѕС‚С‹ РїРѕРґСЃС‚СЂРѕР№РєРё AClarFreq = -99.99...+99.99
 	void SetCLARFreq(float AClarFreq);
 
-	// Разнос частот (split) вкл/выкл
+	// Р Р°Р·РЅРѕСЃ С‡Р°СЃС‚РѕС‚ (split) РІРєР»/РІС‹РєР»
 	void SetSplit(const bool AValue);
 
-	// Установка направления смещения для репитёра 
+	// РЈСЃС‚Р°РЅРѕРІРєР° РЅР°РїСЂР°РІР»РµРЅРёСЏ СЃРјРµС‰РµРЅРёСЏ РґР»СЏ СЂРµРїРёС‚С‘СЂР° 
 	void SetRepeaterOffsetDir(const TRepeaterOffset AValue);
 
-	// Установка частоты смещения для репитёра ARepFreq = частота, например 12.34
+	// РЈСЃС‚Р°РЅРѕРІРєР° С‡Р°СЃС‚РѕС‚С‹ СЃРјРµС‰РµРЅРёСЏ РґР»СЏ СЂРµРїРёС‚С‘СЂР° ARepFreq = С‡Р°СЃС‚РѕС‚Р°, РЅР°РїСЂРёРјРµСЂ 12.34
 	void SetRepeaterOffsetFreq(float ARepFreq);
 
-	// Установка частоты в понятных цифрах, например 14.1234 MHz
+	// РЈСЃС‚Р°РЅРѕРІРєР° С‡Р°СЃС‚РѕС‚С‹ РІ РїРѕРЅСЏС‚РЅС‹С… С†РёС„СЂР°С…, РЅР°РїСЂРёРјРµСЂ 14.1234 MHz
 	void SetMainFreq(float AMainFreq); 
 	
-	// переключить VFO A/B
+	// РїРµСЂРµРєР»СЋС‡РёС‚СЊ VFO A/B
 	void ToggleVFO(void); 
 
-	// установить режим DCS | CTCSS
+	// СѓСЃС‚Р°РЅРѕРІРёС‚СЊ СЂРµР¶РёРј DCS | CTCSS
 	void SetDCSMode(const TDCS_Mode AMode);
 
-	// Установить тоновую частоту режима CTCSS для приема и передачи 
-	// 0..999Гц и та и другая
+	// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ С‚РѕРЅРѕРІСѓСЋ С‡Р°СЃС‚РѕС‚Сѓ СЂРµР¶РёРјР° CTCSS РґР»СЏ РїСЂРёРµРјР° Рё РїРµСЂРµРґР°С‡Рё 
+	// 0..999Р“С† Рё С‚Р° Рё РґСЂСѓРіР°СЏ
 	void SetCTCSSToneFreq(float ATXFreq, float ARXFreq);
 
-	// установить код для DCS для передачи и приема
-	// значения 0..9999 и для того и для другова
+	// СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РєРѕРґ РґР»СЏ DCS РґР»СЏ РїРµСЂРµРґР°С‡Рё Рё РїСЂРёРµРјР°
+	// Р·РЅР°С‡РµРЅРёСЏ 0..9999 Рё РґР»СЏ С‚РѕРіРѕ Рё РґР»СЏ РґСЂСѓРіРѕРІР°
 	void SetDCSCode(const uint16_t ATXCode, const uint16_t ARXCode);
 
-	// Прочитать статус приема
+	// РџСЂРѕС‡РёС‚Р°С‚СЊ СЃС‚Р°С‚СѓСЃ РїСЂРёРµРјР°
 	//
 	TRX_Status ReadRXStatus();
 
-	// Прочитать статус передачи
+	// РџСЂРѕС‡РёС‚Р°С‚СЊ СЃС‚Р°С‚СѓСЃ РїРµСЂРµРґР°С‡Рё
 	//
 	TTX_Status ReadTXStatus();
 };

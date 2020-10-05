@@ -1,4 +1,4 @@
-#include "dtsFT897D.h"
+п»ї#include "dtsFT897D.h"
 
 void dtsFT897D::ClearCmdBuffer(void)
 {
@@ -12,9 +12,9 @@ void dtsFT897D::SendCommand(void) const
 
 void dtsFT897D::Init(const uint32_t ABaudRate)
 {
-	FPort.begin(ABaudRate);    // настроить скорость Software порта. По умолчанию == 9600
+	FPort.begin(ABaudRate);    // РЅР°СЃС‚СЂРѕРёС‚СЊ СЃРєРѕСЂРѕСЃС‚СЊ Software РїРѕСЂС‚Р°. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ == 9600
 	delay(20);
-	SetMode();                 // после инициализации переключить рабочий режим на ключ (по умолчанию)
+	SetMode();                 // РїРѕСЃР»Рµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РїРµСЂРµРєР»СЋС‡РёС‚СЊ СЂР°Р±РѕС‡РёР№ СЂРµР¶РёРј РЅР° РєР»СЋС‡ (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ)
 }
 
 void dtsFT897D::SetLock(const bool AValue)
