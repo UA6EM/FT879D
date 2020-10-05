@@ -1,4 +1,4 @@
-﻿/*
+/*
  Name:		Test_FT897D.ino
  Created:	25.09.2020 7:06:13
  Author:	DtS
