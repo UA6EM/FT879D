@@ -13,15 +13,10 @@ const bool OFF = false;
 #pragma pack(push,1)
 
 struct FT897DCommand {    // буфер команд
-	union {
-		struct {
-			uint8_t Byte0;
-			uint8_t Byte1;
-			uint8_t Byte2;
-			uint8_t Byte3;
-		};
-		uint8_t AsBytes[4];
-	};
+	uint8_t Byte0;
+	uint8_t Byte1;
+	uint8_t Byte2;
+	uint8_t Byte3;
 	uint8_t Command;
 };
 
@@ -37,7 +32,8 @@ enum class TOperatingMode : uint8_t {  // режимы работы
 	FM  = 0x08,
 	DIG = 0x0A,
 	PKT = 0x0C,
-	FMN = 0x88
+	FMN = 0x88,
+	Unknown = 0xFF
 };
 
 enum class TRepeaterOffset : uint8_t {
@@ -153,7 +149,7 @@ public:
 	void SetPTT(const bool AValue);   
 
 	// по умолчанию рабочий режим - ключ
-	void SetMode(const TOperatingMode AMode = TOperatingMode::CW); 
+	void SetOperatingMode(const TOperatingMode AMode = TOperatingMode::CW); 
 
 	// AValue == (ON | OFF)  подстройка частоты вкл/выкл
 	void SetCLAR(const bool AValue); 
@@ -194,6 +190,8 @@ public:
 	// Прочитать статус передачи
 	//
 	TTX_Status ReadTXStatus();
+
+	TOperatingMode GetOperatingMode(void);
 };
 
 #pragma pack(pop)
