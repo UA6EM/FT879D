@@ -14,7 +14,7 @@ void dtsFT897D::Init(const uint32_t ABaudRate)
 {
 	FPort.begin(ABaudRate);    // настроить скорость Software порта. По умолчанию == 9600
 	delay(20);
-	SetMode();                 // после инициализации переключить рабочий режим на ключ (по умолчанию)
+	SetOperatingMode();                 // после инициализации переключить рабочий режим на ключ (по умолчанию)
 }
 
 void dtsFT897D::SetLock(const bool AValue)
@@ -32,8 +32,9 @@ void dtsFT897D::SetPTT(const bool AValue)
 
 }
 
-void dtsFT897D::SetMode(const TOperatingMode AMode)
+void dtsFT897D::SetOperatingMode(const TOperatingMode AMode)
 {
+	if (AMode == TOperatingMode::Unknown) return;
 	ClearCmdBuffer();
 	FCommand.Byte0 = static_cast<uint8_t>(AMode);
 	FCommand.Command = CMD_SET_OPERATING_MODE;
@@ -187,6 +188,11 @@ TTX_Status dtsFT897D::ReadTXStatus()
 	memcpy(&result, &value, 1);
 
 	return result;
+}
+
+TOperatingMode dtsFT897D::GetOperatingMode(void)
+{
+	return TOperatingMode::Unknown;
 }
 
 const char* dtsFT897D::Freq2String(const float AFreq, const uint8_t AIntDigits, const uint8_t ALength)
