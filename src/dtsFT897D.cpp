@@ -1,4 +1,4 @@
-﻿#include "dtsFT897D.h"
+#include "dtsFT897D.h"
 
 void dtsFT897D::ClearCmdBuffer(void)
 {
