@@ -32,6 +32,7 @@ enum class TOperatingMode : uint8_t {  // режимы работы
 	FM  = 0x08,
 	DIG = 0x0A,
 	PKT = 0x0C,
+	CWN = 0x82,
 	FMN = 0x88,
 	Unknown = 0xFF
 };
@@ -96,16 +97,17 @@ const uint8_t CMD_SET_CTCSS_TONE_FREQ = 0x0B;
 
 const uint8_t CMD_SET_DCS_CODE = 0x0C;
 
-const uint8_t CMD_READ_RX_STATUS = 0xE7;
-const uint8_t CMD_READ_TX_STATUS = 0xF7;
+const uint8_t CMD_READ_RX_STATUS = 0xE7;  // прочитать статус приема
+const uint8_t CMD_READ_TX_STATUS = 0xF7;  // прочитать статус передачи
 
-
+const uint8_t CMD_READ_LONG_STATUS = 0x03; // прочитать рабочий режим и установленную частоту
 
 
 class dtsFT897D {
 protected:
 	SoftwareSerial& FPort;
 	FT897DCommand   FCommand;
+
 
 	dtsFT897D() = delete;
 	dtsFT897D(dtsFT897D& rvalue) = delete;
@@ -132,7 +134,8 @@ protected:
 
 	uint8_t ReadByteFromPort(const uint16_t ATimeoutMS);
 
-	void   FlushPort(void) const;
+	bool   ReadLongStatus(const uint16_t ATimeoutMS);
+
 
 public:
 
@@ -191,7 +194,13 @@ public:
 	//
 	TTX_Status ReadTXStatus();
 
+	// Прочитать в каком рабочем режиме находится трансивер
+	//
 	TOperatingMode GetOperatingMode(void);
+
+	// Прочитать, на какую частоту настроен трансивер
+	//
+	float GetFrequency(void);
 };
 
 #pragma pack(pop)
