@@ -3,7 +3,7 @@
  Created:	25.09.2020 7:06:13
  Author:	DtS
 */
-
+float ftFreq;
 #include <SoftwareSerial.h>
 #include "dtsFT897D.h"
 
@@ -16,20 +16,12 @@ void setup() {
 	delay(250);
 	Serial.println("Start...");
 	Radio.Init(4800);
-	Radio.SetMainFreq(14.25);
-	Radio.ToggleVFO();
-	Radio.SetRepeaterOffsetFreq(5.4321);
-	Radio.SetCLAR(ON);
-	Radio.SetCLARFreq(12.5);
-	Radio.SetDCSMode(TDCS_Mode::DCS_ENCODER_ON);
-	Radio.SetCTCSSToneFreq(88.0, 100.0);
-	Radio.SetDCSCode(50, 9500);
-
-	TTX_Status tx_status = Radio.ReadTXStatus();
-	TRX_Status rx_status = Radio.ReadRXStatus();
-
 }
 
 
 void loop() {
+	
+	ftFreq = Radio.GetFrequency();
+	Serial.println("Freq = ",ftFreq);
+	delay(5000);
 }
