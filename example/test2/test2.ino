@@ -7,7 +7,7 @@ float ftFreq;
 #include <SoftwareSerial.h>
 #include "dtsFT897D.h"
 
-SoftwareSerial RadioPort(2,3);
+SoftwareSerial RadioPort(2,3); //RX - TX
 
 dtsFT897D Radio(RadioPort);
 
