@@ -13,7 +13,7 @@ void dtsFT897D::SendCommand(void) const
 void dtsFT897D::Init(const uint32_t ABaudRate)
 {
 	FPort.begin(ABaudRate);    // настроить скорость Software порта. По умолчанию == 9600
-	delay(20);
+	delay(10);
 	SetOperatingMode();                 // после инициализации переключить рабочий режим на ключ (по умолчанию)
 }
 
