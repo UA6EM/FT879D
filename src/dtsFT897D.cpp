@@ -260,11 +260,12 @@ bool dtsFT897D::ReadLongStatus(const uint16_t ATimeoutMS)
 {
 	const uint8_t ANSWER_LENGTH = 5;
 
+	FPort.flush();
+
 	ClearCmdBuffer();
 	FCommand.Command = CMD_READ_LONG_STATUS;
 	SendCommand();
 	delay(20);
-	FPort.flush();
 	uint32_t now = millis();
 	uint8_t* buf = (uint8_t*)(&FCommand);
 
