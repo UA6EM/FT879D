@@ -7,7 +7,7 @@
 #include <SoftwareSerial.h>
 #include "dtsFT897D.h"
 
-SoftwareSerial RadioPort(8,7);
+SoftwareSerial RadioPort(8,7); //RX-TX
 
 dtsFT897D Radio(RadioPort);
 
