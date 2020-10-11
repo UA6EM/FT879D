@@ -1,5 +1,6 @@
 #include "dtsFT897D.h"
 
+
 void dtsFT897D::ClearCmdBuffer(void)
 {
 	memset(&FCommand, 0, COMMAND_SIZE);
@@ -13,7 +14,7 @@ void dtsFT897D::SendCommand(void) const
 void dtsFT897D::Init(const uint32_t ABaudRate)
 {
 	FPort.begin(ABaudRate);    // настроить скорость Software порта. По умолчанию == 9600
-	delay(10);
+	delay(20);
 	SetOperatingMode();                 // после инициализации переключить рабочий режим на ключ (по умолчанию)
 }
 
@@ -199,22 +200,26 @@ TOperatingMode dtsFT897D::GetOperatingMode(void)
 
 float dtsFT897D::GetFrequency(void)
 {
+	const uint8_t MAX_LENGTH = 0x09;
+
 	if (!ReadLongStatus(2000)) return 0.0f;
 
-	char buf[9];
-	memset(buf, 0, 9);
+	char buf[MAX_LENGTH];
+	memset(buf, 0, MAX_LENGTH);
 
 	uint8_t* ptr = (uint8_t*)(&FCommand.Byte0);
+
 	uint8_t idx = 0;
 
 	for (uint8_t i = 0; i < 4; ++i) {
-		buf[idx++] = (ptr[i] >> 4) + '0';
-		buf[idx++] = (ptr[i] & 0x0F) + '0';
+		buf[idx] = (ptr[i] >> 4) + '0';
+		buf[idx+1] = (ptr[i] & 0x0F) + '0';
+		idx += 2;
 	}
-	
+
 	uint32_t result = atol(buf);
 
-	return (result / 1000.0f);
+	return (result / 100000.0f);
 }
 
 const char* dtsFT897D::Freq2String(const float AFreq, const uint8_t AIntDigits, const uint8_t ALength)
@@ -260,11 +265,12 @@ bool dtsFT897D::ReadLongStatus(const uint16_t ATimeoutMS)
 {
 	const uint8_t ANSWER_LENGTH = 5;
 
+	FPort.flush();
+
 	ClearCmdBuffer();
 	FCommand.Command = CMD_READ_LONG_STATUS;
 	SendCommand();
 	delay(20);
-	FPort.flush();
 	uint32_t now = millis();
 	uint8_t* buf = (uint8_t*)(&FCommand);
 
@@ -274,7 +280,7 @@ bool dtsFT897D::ReadLongStatus(const uint16_t ATimeoutMS)
 
 	FPort.readBytes(buf, ANSWER_LENGTH);
 
-	return false;
+	return true;
 }
 
 
