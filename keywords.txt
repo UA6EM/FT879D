@@ -28,8 +28,8 @@ SetDCSCode	KEYWORD2
 ReadRXStatus	KEYWORD2
 ReadTXStatus	KEYWORD2
 dtsFT897D	KEYWORD2
-GetOperatingMode  KEYWORD2
-GetFrequency KEYWORD2
+GetOperatingMode	KEYWORD2
+GetFrequency  KEYWORD2
 #######################################
 # Constants (LITERAL1)
 #######################################
