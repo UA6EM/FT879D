@@ -274,7 +274,7 @@ bool dtsFT897D::ReadLongStatus(const uint16_t ATimeoutMS)
 
 	FPort.readBytes(buf, ANSWER_LENGTH);
 
-	return false;
+	return true;
 }
 
 
