@@ -201,6 +201,9 @@ public:
 	// Прочитать, на какую частоту настроен трансивер
 	//
 	float GetFrequency(void);
+
+//	uint32_t GetFrequency(void);
+
 };
 
 #pragma pack(pop)
