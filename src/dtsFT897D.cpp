@@ -1,19 +1,25 @@
 #include "dtsFT897D.h"
 
+
 void dtsFT897D::ClearCmdBuffer(void)
 {
+	FPort.flush();
 	memset(&FCommand, 0, COMMAND_SIZE);
 }
 
-void dtsFT897D::SendCommand(void) const
+void dtsFT897D::SendCommand(const bool ANeedAnswer) const
 {
 		FPort.write((uint8_t *)(&FCommand), COMMAND_SIZE);
+		if (!ANeedAnswer) {
+			delay(100);
+			while (FPort.available()) FPort.read();
+		}
 }
 
 void dtsFT897D::Init(const uint32_t ABaudRate)
 {
-	FPort.begin(ABaudRate);   		    // настроить скорость Software порта. По умолчанию == 9600
-	delay(10);
+	FPort.begin(ABaudRate);    // настроить скорость Software порта. По умолчанию == 9600
+	delay(20);
 	SetOperatingMode();                 // после инициализации переключить рабочий режим на ключ (по умолчанию)
 }
 
@@ -164,7 +170,7 @@ TRX_Status dtsFT897D::ReadRXStatus()
 	FPort.flush();
 	ClearCmdBuffer();
 	FCommand.Command = CMD_READ_RX_STATUS;
-	SendCommand();
+	SendCommand(true);
 
 	TRX_Status result;
 	uint8_t value = ReadByteFromPort(1000);
@@ -180,7 +186,7 @@ TTX_Status dtsFT897D::ReadTXStatus()
 	ClearCmdBuffer();
 
 	FCommand.Command = CMD_READ_TX_STATUS;
-	SendCommand();
+	SendCommand(true);
 
 	TTX_Status result;
 	uint8_t value = ReadByteFromPort(1000);
@@ -199,22 +205,26 @@ TOperatingMode dtsFT897D::GetOperatingMode(void)
 
 float dtsFT897D::GetFrequency(void)
 {
+	const uint8_t MAX_LENGTH = 0x09;
+
 	if (!ReadLongStatus(2000)) return 0.0f;
 
-	char buf[9];
-	memset(buf, 0, 9);
+	char buf[MAX_LENGTH];
+	memset(buf, 0, MAX_LENGTH);
 
 	uint8_t* ptr = (uint8_t*)(&FCommand.Byte0);
+
 	uint8_t idx = 0;
 
 	for (uint8_t i = 0; i < 4; ++i) {
-		buf[idx++] = (ptr[i] >> 4) + '0';
-		buf[idx++] = (ptr[i] & 0x0F) + '0';
+		buf[idx] = (ptr[i] >> 4) + '0';
+		buf[idx+1] = (ptr[i] & 0x0F) + '0';
+		idx += 2;
 	}
-	
+
 	uint32_t result = atol(buf);
 
-	return (result / 1000.0f);
+	return (result / 100000.0f);
 }
 
 const char* dtsFT897D::Freq2String(const float AFreq, const uint8_t AIntDigits, const uint8_t ALength)
@@ -260,11 +270,12 @@ bool dtsFT897D::ReadLongStatus(const uint16_t ATimeoutMS)
 {
 	const uint8_t ANSWER_LENGTH = 5;
 
+	FPort.flush();
+
 	ClearCmdBuffer();
 	FCommand.Command = CMD_READ_LONG_STATUS;
-	SendCommand();
+	SendCommand(true);
 	delay(20);
-	FPort.flush();
 	uint32_t now = millis();
 	uint8_t* buf = (uint8_t*)(&FCommand);
 
