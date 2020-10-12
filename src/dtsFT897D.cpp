@@ -3,12 +3,17 @@
 
 void dtsFT897D::ClearCmdBuffer(void)
 {
+	FPort.flush();
 	memset(&FCommand, 0, COMMAND_SIZE);
 }
 
-void dtsFT897D::SendCommand(void) const
+void dtsFT897D::SendCommand(const bool ANeedAnswer) const
 {
 		FPort.write((uint8_t *)(&FCommand), COMMAND_SIZE);
+		if (!ANeedAnswer) {
+			delay(100);
+			while (FPort.available()) FPort.read();
+		}
 }
 
 void dtsFT897D::Init(const uint32_t ABaudRate)
@@ -165,7 +170,7 @@ TRX_Status dtsFT897D::ReadRXStatus()
 	FPort.flush();
 	ClearCmdBuffer();
 	FCommand.Command = CMD_READ_RX_STATUS;
-	SendCommand();
+	SendCommand(true);
 
 	TRX_Status result;
 	uint8_t value = ReadByteFromPort(1000);
@@ -181,7 +186,7 @@ TTX_Status dtsFT897D::ReadTXStatus()
 	ClearCmdBuffer();
 
 	FCommand.Command = CMD_READ_TX_STATUS;
-	SendCommand();
+	SendCommand(true);
 
 	TTX_Status result;
 	uint8_t value = ReadByteFromPort(1000);
@@ -269,7 +274,7 @@ bool dtsFT897D::ReadLongStatus(const uint16_t ATimeoutMS)
 
 	ClearCmdBuffer();
 	FCommand.Command = CMD_READ_LONG_STATUS;
-	SendCommand();
+	SendCommand(true);
 	delay(20);
 	uint32_t now = millis();
 	uint8_t* buf = (uint8_t*)(&FCommand);
