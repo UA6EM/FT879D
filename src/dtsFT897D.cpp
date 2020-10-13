@@ -1,19 +1,26 @@
 ﻿#include "dtsFT897D.h"
 
 
+void dtsFT897D::ClearOutString(void)
+{
+	if (FOutString == NULL) return;
+	memset(FOutString, 0, OUTSTRING_LENGTH);
+}
+
 void dtsFT897D::ClearCmdBuffer(void)
 {
 	FPort.flush();
 	memset(&FCommand, 0, COMMAND_SIZE);
+	ClearOutString();
 }
 
 void dtsFT897D::SendCommand(const bool ANeedAnswer) const
 {
-		FPort.write((uint8_t *)(&FCommand), COMMAND_SIZE);
-		if (!ANeedAnswer) {
-			delay(100);
-			while (FPort.available()) FPort.read();
-		}
+	FPort.write((uint8_t *)(&FCommand), COMMAND_SIZE);
+	if (!ANeedAnswer) {
+		delay(50);
+		while (FPort.available()) FPort.read();
+	}
 }
 
 void dtsFT897D::Init(const uint32_t ABaudRate)
@@ -21,6 +28,7 @@ void dtsFT897D::Init(const uint32_t ABaudRate)
 	FPort.begin(ABaudRate);    // настроить скорость Software порта. По умолчанию == 9600
 	delay(20);
 	SetOperatingMode();                 // после инициализации переключить рабочий режим на ключ (по умолчанию)
+	FOutString = new char[OUTSTRING_LENGTH];
 }
 
 void dtsFT897D::SetLock(const bool AValue)
@@ -167,7 +175,6 @@ void dtsFT897D::SetDCSCode(const uint16_t ATXCode, const uint16_t ARXCode)
 
 TRX_Status dtsFT897D::ReadRXStatus()
 {
-	FPort.flush();
 	ClearCmdBuffer();
 	FCommand.Command = CMD_READ_RX_STATUS;
 	SendCommand(true);
@@ -182,7 +189,6 @@ TRX_Status dtsFT897D::ReadRXStatus()
 
 TTX_Status dtsFT897D::ReadTXStatus()
 {
-	FPort.flush();
 	ClearCmdBuffer();
 
 	FCommand.Command = CMD_READ_TX_STATUS;
@@ -229,23 +235,24 @@ float dtsFT897D::GetFrequency(void)
 
 const char* dtsFT897D::Freq2String(const float AFreq, const uint8_t AIntDigits, const uint8_t ALength)
 {
-	static char outbuf[10];
-	memset(outbuf, '0', ALength);
-	outbuf[ALength] = 0x00;
+	if ((FOutString != NULL) && (AFreq>0)) {
 
-	uint32_t Multiplier = 1;
-	for (uint8_t i = 0; i < (ALength-AIntDigits); ++i) { Multiplier *= 10; };
+		memset(FOutString, '0', ALength);
 
-	uint32_t Freq = AFreq * Multiplier;
+		uint32_t Multiplier = 1;
+		for (uint8_t i = 0; i < (ALength - AIntDigits); ++i) { Multiplier *= 10; };
 
-	char* ptr = &outbuf[AIntDigits];
-	if (AFreq >= 1.0) ptr--;
-	if (AFreq >= 10.0) ptr--;
-	if (AFreq >= 100.0) ptr--;
+		uint32_t Freq = AFreq * Multiplier;
 
-	ultoa(Freq, ptr, 10);
+		char* ptr = &FOutString[AIntDigits];
+		if (AFreq >= 1.0) ptr--;
+		if (AFreq >= 10.0) ptr--;
+		if (AFreq >= 100.0) ptr--;
 
-	return outbuf;
+		ultoa(Freq, ptr, 10);
+	}
+
+	return FOutString;
 }
 
 void dtsFT897D::StringToBCD(const char* AFrom, uint8_t* ATo, const uint8_t ALen)
@@ -261,7 +268,7 @@ uint8_t dtsFT897D::ReadByteFromPort(const uint16_t ATimeoutMS)
 {
 	uint32_t now = millis();
 	while (!FPort.available()) {
-		if (millis() - now > ATimeoutMS) return false;
+		if (millis() - now > ATimeoutMS) return 0;
 	}
 	return FPort.read();
 }
@@ -270,12 +277,10 @@ bool dtsFT897D::ReadLongStatus(const uint16_t ATimeoutMS)
 {
 	const uint8_t ANSWER_LENGTH = 5;
 
-	FPort.flush();
-
 	ClearCmdBuffer();
 	FCommand.Command = CMD_READ_LONG_STATUS;
 	SendCommand(true);
-	delay(20);
+	delay(50);
 	uint32_t now = millis();
 	uint8_t* buf = (uint8_t*)(&FCommand);
 
@@ -292,4 +297,10 @@ bool dtsFT897D::ReadLongStatus(const uint16_t ATimeoutMS)
 dtsFT897D::dtsFT897D(SoftwareSerial& ASerialPort) : FPort(ASerialPort)
 {
 	ClearCmdBuffer();
+	FOutString = NULL;
+}
+
+dtsFT897D::~dtsFT897D()
+{
+	if (FOutString != NULL) delete[] FOutString;
 }

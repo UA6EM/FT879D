@@ -58,15 +58,15 @@ struct TRX_Status {
 	bool	unused	: 1;
 	bool	Discr	: 1;
 	bool	Code	: 1;
-	bool	NR		: 1;
+	bool	SQL	: 1;
 };
 
 struct TTX_Status {
 	uint8_t PowerValue	: 4;
 	bool    unused		: 1;
 	bool	Split		: 1;
-	bool	KSV			: 1;
-	bool	Tangenta	: 1;
+	bool	SWR		: 1;
+	bool	PTT		: 1;
 };
 
 const uint8_t CMD_LOCK_ON	= 0x00;		// блокировка вкл/выкл
@@ -104,13 +104,19 @@ const uint8_t CMD_READ_LONG_STATUS = 0x03; // прочитать рабочий 
 
 
 class dtsFT897D {
+private:
+	const uint8_t OUTSTRING_LENGTH = 16;
 protected:
 	SoftwareSerial& FPort;
 	FT897DCommand   FCommand;
 
+	char* FOutString;
+
 
 	dtsFT897D() = delete;
 	dtsFT897D(dtsFT897D& rvalue) = delete;
+
+	void ClearOutString(void);
 
 	void ClearCmdBuffer(void);   // Очищает(обнуляет) буфер комманд. Для внутреннего использования.
 
@@ -141,6 +147,8 @@ public:
 
 	// конструктор. Принимает ранее созданный SoftwareSerial
 	dtsFT897D(SoftwareSerial& ASerialPort); 
+
+	~dtsFT897D();
     
 	// инициализация класса
 	void Init(const uint32_t ABaudRate = 9600); 
