@@ -29,6 +29,7 @@ enum class TOperatingMode : uint8_t {  // режимы работы
 	CW  = 0x02,
 	CWR = 0x03,
 	AM  = 0x04,
+	WFM = 0x06,
 	FM  = 0x08,
 	DIG = 0x0A,
 	PKT = 0x0C,
